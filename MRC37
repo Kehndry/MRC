@@ -1,0 +1,143 @@
+## **MRC 37 – Sustainably Rewarding Long Term Contributors (A MRC 36 Counter-Proposal): A Weight-Adjusted Staked Contribution Score (SCS) with Decay**
+
+**Author: @Kehndry**
+
+**Category: MRI1**
+
+## **Summary**
+This proposal refines Option 1 and 2 proposed by Mechaverse in MRC 36 through the implementation of a Staked Contribution Score (SCS) with Decay. This integration strengthens the link between the value of contributions, long-term commitment, and rewards earned; addressing the following issues present in Options 1 and 2 that are addressed in the “Rationale” section below. 
+
+## **Rationale**
+This proposal aims to incentivize long-term commitment from contributors who demonstrate confidence in the project's success while offering a more nuanced reward structure that recognizes the varying significance of different code contributions.
+
+Options 1 and 2 incentivize upfront commitment to the Morpheus project, but they lack mechanisms to encourage continued commitment over time and may 
+
+**Fixed Lock-in Period & Multiplier:** Options 1 and 2 involve locking tokens or claiming rights for a predetermined period with a fixed multiplier. There is no optionality to accommodate a participants desire to further commit to Morpheus. These options may lead to a potential "front-loading" of contributions.  
+
+**No Reward for Continued Participation:** Neither option 1 or 2 provides any incentive for a contributor to remain active and engaged with Morpheus after the initial lock-in period. There's no reward for continued contributions or ongoing commitment. 
+The weight-adjusted staked contribution score seeks to provide a dynamic system that rewards both the initial commitment (staking) and continued participation (restaking). 
+
+Additionally, Option 1 and 2 provides a high-level framework of maintaining MOR utility such as inference capabilities that enables what I have called a “Double Dipping” of MOR yield as contributors earn MOR from the contribution pool and from smart agent staking, as laid out in MRC 22 and the Waterloo paper, providing double the yield; an asymmetric return profile only available to contributors. The SCS proposes that locked tokens are unable to be used for said rights, ensuring no Morpheus participant is able to reap rewards from multiple dedicated pools at once.    
+
+## **Mechanics**
+**Weight-Adjusted Staked Contribution Score (SCS):** A numerical value reflecting a contributor's locked-in commitment, calculated based on staked MOR tokens and their assigned weight.
+
+**Staking Periods:** Contributors can choose a predetermined staking period (e.g., 3 months, 6 months, 1 year) for their MOR tokens.
+
+**Multiplier based on Staking Duration:** The SCS multiplier increases with the chosen staking period (e.g., 1.1x for 3 months, 1.2x for 6 months, 1.5x for 1 year). This multiplier is applied to the weight-adjusted SCS during the staking period.
+
+**Decay Mechanism:** The contributor's SCS decays linearly over the chosen staking period, incentivizing restaking before the SCS reaches zero to maintain the multiplier benefit. The Decay Mechanism seeks to further incentivize long-term commitment to the Morpheus protocol  by:
+
+1. **Rewarding consistent restaking and ongoing contributions to the protocol.** (This emphasizes the need for continued participation)
+2. **Discouraging "set-and-forget" approaches and promoting sustained engagement with Morpheus.** 
+3. **Valuing both past contributions (reflected in weight) and present activity (reflected in restaking) for a holistic commitment assessment.** 
+
+## **Formula for Calculating SCS (High-Level)**
+The current Staked Contribution Score (SCS) for a contributor is calculated using the following formula:
+```
+
+Current_SCS = (Staked_MOR * Weight) + (Remaining_SCS * (1 - Daily_Decay_Rate * (Current_Day - Start_Day))) 
+             * (Current_Day <= Start_Day + Staking_Period)
+```
+
+**Variable Definitions**
+```
+Staked_MOR: Number of MOR tokens staked by the contributor (integer)
+Weight: Contributor's assigned weight value (integer)
+Staking_Period: Chosen staking duration in days (integer)
+Current_Day: Current day (integer, representing the day for which SCS is being calculated)
+Start_Day: Day staking began (integer)
+Remaining_SCS: Remaining SCS value from a previous staking period, if applicable (decimal)
+Target_SCS_End: Target SCS value at the end of the staking period (decimal, typically 0)
+Daily_Decay_Rate: Decay rate per day (decimal)
+
+```
+
+## **Avoiding Double Dipping: Aligning MOR Utility with A Singular Outcome**
+
+**Locking MOR does not infringe upon staking as described in the Waterloo Paper and MRC 22; rather it avoids Double Dipping sources of MOR.**
+
+The SCS proposes that Contributors receive an increased proportion of the 24% emissions allocated to the contributor pool in exchange for locking their MOR rewards. Enabling the usability of locked MOR, as proposed in MRC 36, for activities such as staking of the same MOR tokens to a specific Smart Agent, as proposed in MRC 22, enables contributors to earn “double” rewards from the Smart Agent's staking pool – which comprises 8% of the 24% allocation of the community builder pool. A double dipping of MOR yield. 
+
+This creates an asymmetric return profile for contributors that goes beyond the framework Morpheus has laid out. The siloed Morpheus pools seek to align the partaking and adherence of an action to a specific outcome. For example, in exchange for staking tokens, and keeping them staked, a user earns their pro rata share of MOR. In order to earn that MOR, the participant must adhere to the staking action and forego the use of their tokens for other yield bearing MOR utilities.  Aligning one MOR utility with a singular outcome ensures fairness. It is up to the participants to evaluate the tradeoffs between yields & MOR utility to determine how they want to participate in the ecosystem. Participants may lock rewards to display continued commitment to Morpheus or stake on a smart agent to achieve the same goal. It can’t be both.  
+
+MRC 37 proposes that the locked MOR rewards cannot be used for further yield bearing instances in the ecosystem due to the former. Locking contributor rewards benefits both the locker and the Morpheus ecosystem; the contributor benefits from receiving increased MOR rewards that directly aligns with their commitment to their delayed gratification while the ecosystem benefits from lowering the float of MOR tokens available to be sold on the open market and increasing scarcity of MOR tokens. 
+As such, this proposal does not require any further technical developments, or implementations, such as a system mirror veCRV, as laid out in MRC 36.
+
+Beyond the issues laid out above, the introduction of a system similar to veCRV would require a complete overhaul of Morpheus infrastructure. 
+
+## **Incentives**
+**Rewarding High-Value Contributions:** Contributors with higher weights (indicating more valuable contributions) receive a proportionally larger boost from the SCS multiplier.
+
+**Encouraging Long-Term Commitment:** The decay mechanism still incentivizes continuous contribution. Weight, representing past contributions, is factored into the SCS calculation, further rewarding long-term commitment.
+
+**Increase Scarcity, Drive Value:** By locking tokens, you remove them from immediate circulation, increasing the relative scarcity of MOR tokens. 
+
+**Avoid Double Dipping:** Contributors earn MOR yield based on their allocated pool and avoid double dipping MOR yield by locking tokens and inhibiting their use for inference capabilities.  
+
+## **Deliverables**
+**1. Updated Smart Contract:**
+
+- The existing Morpheus Smart Contract will be modified to include functionality for:
+- Staking MOR tokens: Allow contributors to stake their MOR rewards for a chosen period.
+- Tracking staked tokens: Maintain a record of each contributor's staked MOR and the associated lock-in period.
+- Weight calculation with decay: Implement an algorithm that calculates the SCS based on the amount of staked MOR, the weight earned from contributions, and the decay rate over the chosen lock-in period.
+- Reward distribution based on SCS: Distribute rewards from the contributor pool according to each contributor's current SCS.
+- Implementing a lock function to disable the use of claimable more for inference contributions. 
+
+**2. SCS Calculation Algorithm:**
+
+- A new algorithm will be developed to calculate the SCS for each contributor. The algorithm will consider:
+- Staked MOR amount: The quantity of MOR tokens a contributor has staked.
+- Weight from Contributions: The weight assigned to the contributor based on their past contributions (code, bug fixes, etc.).
+- Decay Rate: The rate at which the weight associated with staked MOR depreciates over the chosen lock-in period.
+- Lock-in Period: The duration for which a contributor chooses to stake their MOR tokens.
+
+**3. User Interface Updates:**
+
+- The user interface will be updated to enable contributors to:
+- Stake their MOR tokens: Choose a desired lock-in period and stake their MOR tokens.
+- View staked tokens: See the amount of MOR they have staked and the remaining duration of the lock-in period.
+- Monitor SCS: Track their current SCS, which reflects their potential reward share from the contributor pool.
+
+**4. Documentation:**
+
+- Comprehensive documentation will be created, including:
+- Contributor Guide: Explains how to use the staking functionality, including staking periods and reward calculations.
+- Developer Documentation: Provides technical details on the smart contract modifications and the SCS calculation algorithm.
+- Protocol Update Documentation: Updates the existing Morpheus protocol documentation to reflect the new staking system and its impact on reward distribution.
+
+**5. Testing and Validation:**
+
+- A rigorous testing process will be implemented:
+- Unit tests: Verify the functionality of individual smart contract components.
+- Integration tests: Ensure seamless interaction between the staking functionality and other existing smart contract features.
+- User Acceptance Testing (UAT): Allow contributors to test the staking interface and provide feedback before deployment.
+- Security audits: Conduct thorough security audits to identify and address potential vulnerabilities in the updated smart contract.
+
+**6. Deployment Plan:**
+
+- A detailed deployment plan will be outlined:
+- Timeline: Clearly define the timeframe for development, testing, and deployment of the staking system.
+- Risk Assessment: Identify potential risks associated with the deployment, such as smart contract vulnerabilities or user interface issues.
+- Mitigation Strategies: Define strategies to address identified risks and ensure a smooth deployment process.
+
+## **Value Proposition**
+This system strengthens the link between code quality, weight, and rewards. Contributors with high-value contributions are incentivized to participate actively, leading to a more robust codebase for the Morpheus ecosystem.
+
+## **Implementation & Author Experience**
+Open to anyone able to implement. Further development into the model is necessary to execute this proposal; the model can be procured by Kehndry and all interested parties upon sufficient consensus in moving together with this framework.  
+
+Kehndry began his Morpheus Journey in December 2023 and has tested and contributed to a wide array of facets within the Morpheus ecosystem. 
+
+## **New Weights Requested (As-is)**
+150,000 split pro rata between @Kehndry (75%) and @Mechaverse (25%; based on writing the precedent paper)
+
+## **Existing Weights**
+No weights are being replaced, rather it is a proposal to enhance functionality to an pre-existing framework. 
+
+## **Future Proposal Proceedings**
+Should the consensus of Morpheus participants pertaining to rewarding long term contributors comprise aspects of Options 1 and 2, as outlined in MRC 36, and aspects of MRC 37, @Kehndry and @Mechaverse will combine proposals at a 50/50 split of the weights requested on the new proposal. 
+
+## **Status**
+In Discussion
